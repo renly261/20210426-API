@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <table id="tab" border="1">
+        <tr>
+            <td>name:</td>
+            <td>uri:</td>
+            <td>content:</td>
+            <td>published:</td>
+            <td>summary:</td>
+            <td>title:</td>
+            <td>url:</td>
+        </tr>
+    </table>
+    <script src="../jquery-3.6.0.min.js"></script>
+
+    <script>
+        // 抓資料
+        $.get('https://kktix.com/events.json', function (response) {
+            console.log(response.entry)
+            // 跑陣列
+            for (let i = 0; i < response.entry.length; i++) {
+                // 將陣列跑出來的資料插入 html
+                $('#tab').append(
+                    `
+                <tr>
+                    <td>${i + 1}.${response.entry[i].author.name}</td>
+                    <td>${response.entry[i].author.uri}</td>                
+                    <td>${response.entry[i].content}</td>                   
+                    <td>${response.entry[i].published}</td>          
+                    <td>${response.entry[i].summary}</td>
+                    <td>${response.entry[i].title}</td>
+                    <td><a href="${response.entry[i].url}">${response.entry[i].url}</a></td>         
+                </tr>
+                `
+                )
+            }
+        }, 'json')
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>

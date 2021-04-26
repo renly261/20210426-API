@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.2.0/chart.min.js"
+        integrity="sha512-VMsZqo0ar06BMtg0tPsdgRADvl0kDHpTbugCBBrL55KmucH6hP9zWdLIWY//OTfMnzz6xWQRxQqsUFefwHuHyg=="
+        crossorigin="anonymous"></script>
+
+    <canvas id="chart"></canvas>
+
+    <script>
+        const ctx = document.getElementById('chart').getContext('2d')
+
+        axios.get('https://apiservice.mol.gov.tw/OdService/download/A17000000J-030243-WSk')
+            .then(({ data }) => {
+                // 設定年和月的空陣列
+                const year = []
+                const month = []
+
+                // 跑迴圈
+                for (const d of data) {
+                    // 將迴圈跑出來的值 push 進陣列
+                    year.push(d.年度)
+
+                    // 月薪是數字要用 parseInt()
+                    month.push(parseInt(d['基本工資（元）-月薪']))
+                }
+                new Chart(ctx, {
+                    // 折線圖
+                    type: 'line',
+                    data: {
+                        // x 軸的資料
+                        labels: year,
+
+                        // 資料集
+                        datasets: [
+                            {
+                                // 資料名稱
+                                label: '基本月薪',
+
+                                // 資料的值, y 軸對應 x 軸的資料
+                                data: month,
+
+                                // 邊框顏色
+                                borderColor: '#f00',
+
+                                // 填滿顏色
+                                backgroundColor: '#faa',
+
+                                // 邊框粗細
+                                borderWidth: 5,
+
+                                // 彎曲程度，0 是直線
+                                lineTension: 0
+                            }
+                        ]
+                    }
+                })
+            })
+
+    </script>
+
+</body>
+
+</html>

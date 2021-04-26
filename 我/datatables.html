@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+</head>
+
+<body>
+    <!-- 引用順序有差 要先引用 jQ 再引用 datatables 因為 datatables 是用 jQ -->
+    <script src="../jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+    <!-- datatables 必須要有 thead 因為 datatables 是用 thead 來做排序 -->
+    <!-- 要先 append 東西進去 再用 datatables -->
+    <table id="table">
+        <thead>
+            <tr>
+                <th>名稱</th>
+                <th>時間</th>
+                <th>內容</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script>
+        $.get('https://kktix.com/events.json', function (response) {
+            for (let data of response.entry) {
+                $("#table tbody").append(`
+          <tr>
+            <td>${data.title}</td>
+            <td>${new Date(data.published).toLocaleString()}</td>
+            <td>${data.summary}</td>
+          </tr>
+        `)
+            }
+            // 套用 datatables 要在 for 迴圈外
+            $("#table").DataTable({
+                // 設定多語言 翻譯 datatables
+                // https://datatables.net/plug-ins/i18n/ 底下有各種語言 點進去往下拉有 CDN 
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Chinese-traditional.json'
+                },
+                // 欄位預設值
+                columnDefs: [
+                    {
+                        // 第三欗 目標欄位 從 0 開始
+                        targets: [2],
+
+                        // 關閉排序
+                        orderable: false
+                    }
+                ],
+                // 一頁幾筆 顯示幾項結果     
+                lengthMenu: [
+                    // 數值，-1 是全部
+                    [5, 10, 20, -1],
+                    // 顯示文字
+                    [5, 10, 20, '全部']
+                ]
+            })
+        })
+    </script>
+</body>
+
+</html>
